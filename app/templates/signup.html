@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Lagom Space{% endblock %}
+{% block content%}
+  <h2>Sign up</h2>
+  <form method="post">
+    <fieldset>
+      <legend>Account Information</legend>
+      {{ form.hidden_tag() }}
+      <!--CSRF 보호를 위한 Hidden Field를 생성-->
+      <div class="mb-3">
+        {{ form.user_id.label(class="form-label") }}
+        <!--user_id 필드에 해당하는 레이블을 출력-->
+        <br/>
+        {{ form.user_id(class="form-control", size=32, placeholder="Enter your ID") }}
+        <!--입력크기 설정-->
+        {% if form.user_id.errors %}
+          <ul class="text-danger">
+            {% for error in form.user_id.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        {{ form.user_name.label(class="form-label") }}
+        {{ form.user_name(class="form-control", size=32, placeholder="Enter your name") }}
+        {% if form.user_name.errors %}
+          <ul class="text-danger">
+            {% for error in form.user_name.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        {{ form.user_email.label(class="form-label") }}
+        {{ form.user_email(class="form-control", size=32, placeholder="email@example.com" ) }}
+        {% if form.user_email.errors %}
+          <ul class="text-danger">
+            {% for error in form.user_email.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        {{ form.user_passwd.label(class="form-label") }}
+        {{ form.user_passwd(class="form-control", size=32, placeholder="Enter your password",  type="password") }}
+        {% if form.user_passwd.errors %}
+          <ul class="text-danger">
+            {% for error in form.user_passwd.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        {{ form.confirm_password.label(class="form-label") }}
+        {{ form.confirm_password(class="form-control", size=32, placeholder="Confirm your password",  type="password") }}
+        {% if form.confirm_password.errors %}
+          <ul class="text-danger">
+            {% for error in form.confirm_password.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="mt-4">{{ form.submit(class="btn btn-primary") }}</div>
+    </fieldset>
+  </form>
+  <!-- 모달 창 -->
+
+  <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Account created successfully!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for('auth.login') }}'">Go to Login</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 모달을 띄우는 스크립트 -->
+  {% if show_modal %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+        console.log("Modal script executed");
+        myModal.show();
+      });
+    </script>
+  {% endif %}
+  {# {% if show_modal %}
+    <p>Show Modal is True</p>
+  {% else %}
+    <p>Show Modal is False</p>
+  {% endif %} #}
+{% endblock %}

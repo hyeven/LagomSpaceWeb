@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+{% block content %}
+  <h2>Login</h2>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+      {{ form.user_id.label(class="form-label") }}
+      {{ form.user_id(class="form-control", placeholder="Enter your user ID") }}
+    </div>
+    <div class="mb-3">
+      {{ form.user_passwd.label(class="form-label") }}
+      {{ form.user_passwd(class="form-control", placeholder="Enter your password") }}
+    </div>
+    <div class="mt-4">
+      {{ form.submit(class="btn btn-primary") }}
+    </div>
+
+  </form>
+
+{% endblock %}

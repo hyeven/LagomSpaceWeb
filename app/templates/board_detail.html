@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}Lagom Space{% endblock %}
+{% block content%}
+  <div class="container mt-5">
+    <!-- 제목 -->
+    <div class="row mb-4">
+      <div class="col-12 text-left">
+        <h1>Board</h1>
+      </div>
+    </div>
+
+    <!-- 카드로 감싼 테이블 -->
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            Details
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered mb-0">
+              <tbody>
+                <!-- 사용자 정보 -->
+                <tr>
+                  <th class="w-25">Author</th>
+                  <td class="w-75">{{ board_item.user_name }}</td>
+                </tr>
+                <tr>
+                  <th>User ID</th>
+                  <td>{{ board_item.user_id }}</td>
+                </tr>
+                <tr>
+                  <th>Views
+                  </th>
+                  <td>{{ board_item.view_count }}</td>
+                </tr>
+
+                <!-- 게시글 본문 -->
+                <tr>
+                  <th>Title</th>
+                  <td>{{ board_item.board_title }}</td>
+                </tr>
+                <tr>
+                  <th>Content</th>
+                  <td>{{ board_item.board_content }}</td>
+                </tr>
+                <tr>
+                  <th>Attached File</th>
+                  <td>
+                    <!-- 업로드된 파일 표시 -->
+                    {% if file_name %}
+                      {% if file_name.endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+                      <!-- 이미지 파일 미리보기 -->
+                      <img src="{{ url_for('static', filename='uploads/' + file_name) }}" alt="Attached File" style="max-width: 300px; max-height: 300px;">
+                      {% else %}
+                      <!-- 파일 이름과 다운로드 버튼 -->
+                      <p>{{ file_name }}</p>
+                      <a href="{{ url_for('main.download_file', file_name=file_name) }}" class="btn btn-success">Download File</a>
+                      {% endif %}
+                    {% else %}
+                      None
+                    {% endif %}
+                  </td>
+                </tr>
+
+                <!-- 생성일 및 수정일 -->
+                <tr>
+                  <th>Created At</th>
+                  <td>{{ board_item.created_at }}</td>
+                </tr>
+                {# <tr>
+                  <th>Last Updated</th>
+                  <td>{{ board_item.last_updated }}</td>
+                </tr> #}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 버튼 섹션 -->
+    <div class="row mt-4">
+      <div class="col-12 text-end">
+        <!-- Edit 버튼 -->
+        {% if current_user.user_id == board_item.user_id %}
+          <a href="{{ url_for('main.board_update', board_id=board_item.idx) }}" class="btn btn-primary">Edit</a>
+        {% endif %}
+
+        <!-- Delete 버튼 -->
+        {% if current_user.user_id == board_item.user_id%}
+          <form method="post" action="{{ url_for('main.board_delete', board_id=board_item.idx) }}" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          {% endif %}
+
+          <!-- 돌아가기 버튼 -->
+          <a href="{{ url_for('main.board') }}" class="btn btn-secondary">Back to Board</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 조회수 증가 비동기 방식으로 처리 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("{{ url_for('main.increase_view', board_id=board_item.idx) }}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(response => {
+        if (response.ok) {
+          console.log("View count updated");
+        } else {
+          console.error("Failed to update view count");
+        }
+      });
+    });
+  </script>
+{% endblock %}

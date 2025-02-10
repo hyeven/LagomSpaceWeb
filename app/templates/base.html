@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>
+      {% block title %}Lagom Space{% endblock %}
+    </title>
+
+    <!-- Bootswatch Morph Theme CSS -->
+    <link href="https://bootswatch.com/5/morph/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Bootstrap JS (필수: Popper.js 포함) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom CSS (Optional) -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"/>
+
+    <!-- favicon.ico 404오류 해결을 위해 추가-->
+    <link rel="shortcut icon" href="#">
+
+    <style>
+      .flash {
+        position: fixed;
+        /* 화면에 고정 */
+        top: 50px;
+        /* 화면 위에서 20px 아래에 배치 */
+        left: 50%;
+        /* 화면의 가로 중앙 정렬 */
+        transform: translateX(-50%);
+        /* 중앙 정렬을 위한 보정 */
+        z-index: 1050;
+        /* 다른 요소보다 위에 표시 */
+        width: auto;
+        /* 필요한 만큼의 너비로 설정 */
+        max-width: 95%;
+        /* 너무 커지지 않도록 제한 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* 약간의 그림자 효과 */
+      }
+    </style>
+  </head>
+
+  <div>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">Lagom Space</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor03">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="{{ url_for('main.index') }}">Home
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.mypage') }}">MyPage</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('main.board') }}">Board</a>
+            </li>
+            {# <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li> #}
+            {% if current_user.is_authenticated %}
+              <!-- Admin 전용 링크 -->
+              {% if current_user.user_id == "admin" %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('main.admin_page') }}">Admin</a>
+                </li>
+              {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign Up</a>
+              </li>
+            {% endif %}
+          </ul>
+          <form class="d-flex">
+            <input class="form-control me-sm-2" type="search" placeholder="Search"/>
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <div class="container my-5 d-flex flex-column justify-content-start" style="min-height: 600px;">
+      <!-- Flash 메시지 표시 부분 -->
+      {% with messages = get_flashed_messages(with_categories = true) %}
+      {% if messages%}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show flash" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <!-- Flash 메시지 표시 부분 끝 -->
+      <!-- Main Content Area -->
+      {% block content %}
+        <!-- This block will be overridden by child templates -->
+      {% endblock %}
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4">
+      <div class="container text-center">
+        <p class="mb-0">&copy; 2024 Lagom Space App. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // flash 알림창 3초 후 사라짐
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+          const flashMessage = document.querySelector('.flash');
+          if (flashMessage) {
+            flashMessage.style.transition = "opacity 0.5s ease";
+            flashMessage.style.opacity = "0"; // 서서히 사라지도록 설정
+
+            setTimeout(() => flashMessage.remove(), 500); // 요소를 완전히 제거
+          }
+        }, 3000); // 3초 후 사라짐
+      });
+    </script>
+  </body>
+
+</html>

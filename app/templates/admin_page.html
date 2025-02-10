@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Lagom Space{% endblock %}
+{% block content%}
+  <div class="container">
+    <h1 class="mt-5">User Management</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.idx }}</td>
+            <td>{{ user.user_id }}</td>
+            <td>{{ user.user_name }}</td>
+            <td>{{ user.user_email }}</td>
+            <td>
+              <!-- 삭제 버튼 -->
+              <form method="post" class="d-inline">
+                <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                <input type="hidden" name="action" value="delete">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+              <!-- 수정 버튼 -->
+              <button class="btn btn-primary btn-sm" onclick="openEditModal('{{ user.user_id }}', '{{ user.user_name }}', '{{ user.user_email }}')">Edit</button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 수정 모달 -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <input type="hidden" name="user_id" id="editUserId">
+            <div class="mb-3">
+              <label for="newName" class="form-label">New Username</label>
+              <input type="text" class="form-control" name="new_name" id="newName" required="required">
+            </div>
+            <div class="mb-3">
+              <label for="newEmail" class="form-label">New Email</label>
+              <input type="email" class="form-control" name="new_email" id="newEmail" required="required">
+            </div>
+            <input type="hidden" name="action" value="update">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Open edit modal and populate fields
+    function openEditModal(userId, userName, userEmail) {
+      const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+      document
+        .getElementById('editUserId')
+        .value = userId;
+      document
+        .getElementById('newName')
+        .value = userName;
+      document
+        .getElementById('newEmail')
+        .value = userEmail;
+      editModal.show();
+    }
+  </script>
+{% endblock %}

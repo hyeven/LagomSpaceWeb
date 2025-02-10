@@ -1,0 +1,8 @@
+venv/ 
+venv/Lib/site-packages/tensorflow/ 
+venv/Lib/site-packages/clang/native/libclang.dll 
+venv/  
+__pycache__/  
+*.log  
+.vscode/  
+db.sqlite3 

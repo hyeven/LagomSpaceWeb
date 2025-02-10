@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Lagom Space{% endblock %}
+{% block content%}
+
+    <h1 class="mt-5">My Page</h1>
+    <form>
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.user_id.label(class="form-label") }}
+        {{ form.user_id(class="form-control", readonly=True) }}
+      </div>
+      <div class="mb-3">
+        {{ form.user_name.label(class="form-label") }}
+        {{ form.user_name(class="form-control", readonly=True) }}
+      </div>
+      <div class="mb-3">
+        {{ form.user_email.label(class="form-label") }}
+        {{ form.user_email(class="form-control", readonly=True) }}
+      </div>
+      <div class="mb-3">
+        {{ form.user_passwd.label(class="form-label") }}
+        {{ form.user_passwd(class="form-control", readonly=True) }}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Last Updated</label>
+        <input type="text" class="form-control" value="{{ last_updated }}" readonly="readonly"/>
+      </div>
+      <a href="{{ url_for('main.mypage_update') }}" class="btn btn-primary">Edit</a>
+    </form>
+
+
+  {# <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const editButton = document.getElementById("editButton");
+      const saveButton = document.getElementById("saveButton");
+      const formFields = document.querySelectorAll(".form-control[readonly]");
+
+      editButton.addEventListener("click", function () {
+        // 폼 필드 활성화
+        formFields.forEach((field) => {
+          field.removeAttribute("readonly");
+        });
+
+        // 비밀번호 필드 초기화 (필드가 존재하는 경우만)
+        const passwordField = document.getElementById("password");
+        if (passwordField) {
+          passwordField.value = "";
+        }
+
+        // Save 버튼 활성화
+        saveButton.removeAttribute("disabled");
+
+        // Edit 버튼 비활성화
+        editButton.setAttribute("disabled", "true");
+      });
+    });
+  </script> #}
+{% endblock %}
